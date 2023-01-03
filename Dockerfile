@@ -11,6 +11,7 @@ RUN \
           curl \
           gnupg \
           apt-transport-https\
+          openjdk-11-jdk \
           tar \
           gnupg \
           apt-transport-https \
@@ -22,6 +23,7 @@ RUN \
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 RUN sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list'
 RUN sudo apt-get update && sudo apt-get install -y powershell  
+
 #
 
 # Create a user named zap
@@ -34,6 +36,9 @@ RUN useradd -ms /bin/bash $user -N -u $UID $USER && \
         chmod 0440 /etc/sudoers.d/$user && \
         chmod g+w /etc/passwd 
 #
+
+#RUN sudo chmod +x ZAP_2_12_0_unix.sh
+#RUN sudo ./ZAP_2_12_0_unix.sh install
 
 USER zap
 WORKDIR /usr/local/bin/zap
@@ -49,5 +54,8 @@ COPY . /home/zap/myagent
 WORKDIR /home/zap/myagent
 RUN tar zxvf /home/zap/myagent/vsts-agent-linux-x64-2.213.2.tar.gz
 RUN rm /home/zap/myagent/vsts-agent-linux-x64-2.213.2.tar.gz
+RUN tar zxvf /home/zap/myagent/ZAP_2.12.0_Linux.tar.gz
+RUN rm /home/zap/myagent/ZAP_2.12.0_Linux.tar.gz
+RUN rm /home/zap/myagent/powershell-7.3.0-linux-x64.tar.gz
 
 CMD ["bash"]
